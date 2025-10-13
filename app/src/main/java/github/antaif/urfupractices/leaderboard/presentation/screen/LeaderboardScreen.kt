@@ -54,7 +54,7 @@ private fun LeaderboardContent(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(
-                            text = "Лидерборд сезона"
+                            text = "Season leaderboard"
                         )
 
                         Column {
