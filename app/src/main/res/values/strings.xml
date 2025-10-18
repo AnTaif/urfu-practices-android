@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">UrfuPractices</string>
+    <string name="position">Position</string>
+    <string name="points">Points</string>
+    <string name="wins">Wins</string>
+    <string name="nationality">Nationality: %1$s</string>
+    <string name="country">Country: %1$s</string>
+    <string name="team">Team: %1$s</string>
+    <string name="leaderboard_wins">%1$d wins</string>
+    <string name="leaderboard_pts">%1$d pts</string>
+    <string name="season_leaderboard">Season leaderboard</string>
+    <string name="driver_details">Driver Details</string>
+    <string name="back">Back</string>
 </resources>

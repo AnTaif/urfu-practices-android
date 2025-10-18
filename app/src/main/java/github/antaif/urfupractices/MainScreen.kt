@@ -27,19 +27,20 @@ import org.koin.java.KoinJavaComponent.inject
 fun MainScreen() {
     val topLevelBackStack by inject<TopLevelBackStack<Route>>(clazz = TopLevelBackStack::class.java)
 
-    Scaffold(bottomBar = {
-        NavigationBar {
-            Routes.navigationBarRoutes.forEach { route ->
-                NavigationBarItem(
-                    icon = { Icon(route.icon, null) },
-                    selected = topLevelBackStack.topLevelKey == route,
-                    onClick = {
-                        topLevelBackStack.addTopLevel(route)
-                    }
-                )
+    Scaffold(
+        bottomBar = {
+            NavigationBar {
+                Routes.navigationBarRoutes.forEach { route ->
+                    NavigationBarItem(
+                        icon = { Icon(route.icon, null) },
+                        selected = topLevelBackStack.topLevelKey == route,
+                        onClick = {
+                            topLevelBackStack.addTopLevel(route)
+                        }
+                    )
+                }
             }
-        }
-    }) { padding ->
+        }) { padding ->
         NavDisplay(
             backStack = topLevelBackStack.backStack,
             onBack = { topLevelBackStack.removeLast() },

@@ -7,30 +7,29 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import github.antaif.urfupractices.R
 import github.antaif.urfupractices.leaderboard.presentation.LeaderboardMockData
 import github.antaif.urfupractices.leaderboard.presentation.model.ui.LeaderboardDriverUiModel
 import github.antaif.urfupractices.leaderboard.presentation.model.ui.LeaderboardUiModel
 import github.antaif.urfupractices.leaderboard.presentation.viewModel.LeaderboardViewModel
+import github.antaif.urfupractices.uikit.Spacing
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun LeaderboardScreen() {
-
     val viewModel = koinViewModel<LeaderboardViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -46,33 +45,29 @@ private fun LeaderboardContent(
     leaderboard: LeaderboardUiModel,
     onDriverClick: (LeaderboardDriverUiModel) -> Unit,
 ) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Row(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = "Season leaderboard"
-                        )
+    Column {
+        TopAppBar(
+            title = {
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = stringResource(R.string.season_leaderboard)
+                    )
 
-                        Column {
-                            Text(
-                                text = leaderboard.season,
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
+                    Column {
+                        Text(
+                            text = leaderboard.season,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     }
                 }
-            )
-        }
-    ) { padding ->
+            }
+        )
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
                 .background(MaterialTheme.colorScheme.background)
         ) {
             leaderboard.driversLeaderboard.forEach {
@@ -91,20 +86,19 @@ private fun LeaderboardRow(driver: LeaderboardDriverUiModel, onClick: () -> Unit
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 12.dp)
+            .padding(horizontal = Spacing.medium, vertical = Spacing.small)
             .clickable { onClick() },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             text = "${driver.position}",
-            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-            modifier = Modifier.width(32.dp)
+            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
         )
 
         Column(
             modifier = Modifier
                 .weight(1f)
-                .padding(start = 8.dp)
+                .padding(start = Spacing.medium)
         ) {
             Text(
                 text = driver.driverName,
@@ -121,11 +115,11 @@ private fun LeaderboardRow(driver: LeaderboardDriverUiModel, onClick: () -> Unit
             horizontalAlignment = Alignment.End
         ) {
             Text(
-                text = "${driver.points} pts",
+                text = stringResource(R.string.leaderboard_pts, driver.points),
                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
             )
             Text(
-                text = "${driver.wins} wins",
+                text = stringResource(R.string.leaderboard_wins, driver.wins),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
