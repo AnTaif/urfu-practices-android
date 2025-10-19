@@ -2,6 +2,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("com.google.devtools.ksp") version "2.2.0-2.0.2"
+    id("de.jensklingenberg.ktorfit") version "2.6.4"
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.2.20"
 }
 
 android {
@@ -62,14 +65,20 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
-    // Navigation
     implementation(libs.bundles.navigation3)
     implementation(libs.kotlinx.serialization.core)
+    implementation(libs.kotlinx.serialization.json)
 
-    // image loading
     implementation(libs.glide)
     implementation(libs.glide.compose)
 
-    // DI
     implementation(libs.bundles.koin)
+
+    implementation(libs.ktorfit.lib)
+    implementation(libs.ktor.client.serialization)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.ktorfit.converters.response)
+    implementation(libs.ktorfit.converters.call)
+    implementation(libs.ktorfit.converters.flow)
 }
