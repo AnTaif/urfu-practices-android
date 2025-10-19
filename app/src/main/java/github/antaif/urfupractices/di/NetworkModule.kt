@@ -8,13 +8,13 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.dsl.module
 
-const val f1ApiUrl = "https://f1api.dev/api/"
+const val F1_API_BASE_URL = "https://f1api.dev/api/"
 
 val networkModule = module {
 
     single {
         Ktorfit.Builder()
-            .baseUrl(f1ApiUrl)
+            .baseUrl(F1_API_BASE_URL)
             .httpClient(HttpClient {
                 install(ContentNegotiation) {
                     json(Json { isLenient = true; ignoreUnknownKeys = true })
