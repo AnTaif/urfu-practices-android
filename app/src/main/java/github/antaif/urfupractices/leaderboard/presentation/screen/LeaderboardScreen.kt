@@ -37,7 +37,8 @@ fun LeaderboardScreen() {
 
     LeaderboardContent(
         state.state,
-        onDriverClick = { viewModel.onDriverClick(it) }
+        onDriverClick = { viewModel.onDriverClick(it) },
+        onRetryClick = { viewModel.onRetryClick() },
     )
 }
 
@@ -46,7 +47,7 @@ fun LeaderboardScreen() {
 private fun LeaderboardContent(
     state: LeaderboardState.State,
     onDriverClick: (LeaderboardDriverUiModel) -> Unit,
-    onRetryClick: () -> Unit = {},
+    onRetryClick: () -> Unit,
 ) {
     when (state) {
         LeaderboardState.State.Loading -> {
@@ -149,5 +150,9 @@ private fun LeaderboardRow(driver: LeaderboardDriverUiModel, onClick: () -> Unit
 @Preview
 @Composable
 private fun SeasonLeaderboardScreenPreview() {
-    LeaderboardContent(LeaderboardState.State.Success(LeaderboardMockData.leaderboard), onDriverClick = {})
+    LeaderboardContent(
+        LeaderboardState.State.Success(LeaderboardMockData.leaderboard),
+        onDriverClick = {},
+        onRetryClick = {}
+    )
 }

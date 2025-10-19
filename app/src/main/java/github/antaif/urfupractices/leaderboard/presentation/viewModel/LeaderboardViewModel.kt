@@ -2,6 +2,7 @@ package github.antaif.urfupractices.leaderboard.presentation.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import github.antaif.urfupractices.core.launchLoadingAndError
 import github.antaif.urfupractices.leaderboard.domain.interactor.LeaderboardInteractor
 import github.antaif.urfupractices.leaderboard.domain.model.LeaderboardEntity
 import github.antaif.urfupractices.leaderboard.presentation.model.state.LeaderboardState
@@ -13,7 +14,6 @@ import github.antaif.urfupractices.navigation.TopLevelBackStack
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 class LeaderboardViewModel(
     private val topLevelBackStack: TopLevelBackStack<Route>,
@@ -30,8 +30,12 @@ class LeaderboardViewModel(
         topLevelBackStack.add(Routes.LeaderboardDriverDetails(driver))
     }
 
+    fun onRetryClick() = loadCurrentLeaderboard()
+
     private fun loadCurrentLeaderboard() {
-        viewModelScope.launch {
+        viewModelScope.launchLoadingAndError(
+            handleError = { e -> updateState(LeaderboardState.State.Error(e.localizedMessage)) }
+        ) {
             updateState(LeaderboardState.State.Loading)
 
             val leaderboard = interactor.getCurrentLeaderboard()
