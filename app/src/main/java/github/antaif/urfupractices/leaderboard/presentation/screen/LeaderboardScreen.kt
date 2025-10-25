@@ -22,9 +22,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import github.antaif.urfupractices.R
 import github.antaif.urfupractices.leaderboard.presentation.LeaderboardMockData
+import github.antaif.urfupractices.leaderboard.presentation.model.state.LeaderboardState
 import github.antaif.urfupractices.leaderboard.presentation.model.ui.LeaderboardDriverUiModel
-import github.antaif.urfupractices.leaderboard.presentation.model.ui.LeaderboardUiModel
 import github.antaif.urfupractices.leaderboard.presentation.viewModel.LeaderboardViewModel
+import github.antaif.urfupractices.uikit.FullscreenError
+import github.antaif.urfupractices.uikit.FullscreenLoading
 import github.antaif.urfupractices.uikit.Spacing
 import org.koin.androidx.compose.koinViewModel
 
@@ -34,46 +36,64 @@ fun LeaderboardScreen() {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LeaderboardContent(
-        state.leaderboard,
-        onDriverClick = { viewModel.onDriverClick(it) }
+        state.state,
+        onDriverClick = { viewModel.onDriverClick(it) },
+        onRetryClick = { viewModel.onRetryClick() },
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LeaderboardContent(
-    leaderboard: LeaderboardUiModel,
+    state: LeaderboardState.State,
     onDriverClick: (LeaderboardDriverUiModel) -> Unit,
+    onRetryClick: () -> Unit,
 ) {
-    Column {
-        TopAppBar(
-            title = {
-                Row(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = stringResource(R.string.season_leaderboard)
-                    )
+    when (state) {
+        LeaderboardState.State.Loading -> {
+            FullscreenLoading()
+        }
 
-                    Column {
-                        Text(
-                            text = leaderboard.season,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+        is LeaderboardState.State.Error -> {
+            FullscreenError(
+                retry = { onRetryClick() },
+                text = state.error
+            )
+        }
+
+        is LeaderboardState.State.Success -> {
+            val leaderboard = state.data
+            Column {
+                TopAppBar(
+                    title = {
+                        Row(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = stringResource(R.string.season_leaderboard)
+                            )
+
+                            Column {
+                                Text(
+                                    text = leaderboard.season,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
                     }
-                }
-            }
-        )
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
-        ) {
-            leaderboard.driversLeaderboard.forEach {
-                item(key = it.position) {
-                    LeaderboardRow(it) {
-                        onDriverClick(it)
+                )
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.background)
+                ) {
+                    leaderboard.driversLeaderboard.forEach {
+                        item(key = it.position) {
+                            LeaderboardRow(it) {
+                                onDriverClick(it)
+                            }
+                        }
                     }
                 }
             }
@@ -130,5 +150,9 @@ private fun LeaderboardRow(driver: LeaderboardDriverUiModel, onClick: () -> Unit
 @Preview
 @Composable
 private fun SeasonLeaderboardScreenPreview() {
-    LeaderboardContent(LeaderboardMockData.leaderboard, onDriverClick = {})
+    LeaderboardContent(
+        LeaderboardState.State.Success(LeaderboardMockData.leaderboard),
+        onDriverClick = {},
+        onRetryClick = {}
+    )
 }

@@ -11,4 +11,5 @@
     <string name="season_leaderboard">Season leaderboard</string>
     <string name="driver_details">Driver Details</string>
     <string name="back">Back</string>
+    <string name="error_occurred">Error occurred</string>
 </resources>
