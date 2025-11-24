@@ -2,6 +2,7 @@ package github.antaif.urfupractices.leaderboard.presentation.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import github.antaif.urfupractices.leaderboard.data.cache.FilterBadgeCache
 import github.antaif.urfupractices.leaderboard.data.model.LeaderboardFilterSettings
 import github.antaif.urfupractices.leaderboard.data.repository.LeaderboardFilterPreferencesRepository
 import github.antaif.urfupractices.navigation.Route
@@ -13,7 +14,8 @@ import kotlinx.coroutines.launch
 
 class LeaderboardFilterViewModel(
     private val topLevelBackStack: TopLevelBackStack<Route>,
-    private val leaderboardFilterPreferencesRepository: LeaderboardFilterPreferencesRepository
+    private val leaderboardFilterPreferencesRepository: LeaderboardFilterPreferencesRepository,
+    private val filterBadgeCache: FilterBadgeCache
 ) : ViewModel() {
     
     private val mutableState = MutableStateFlow(LeaderboardFilterSettings())
@@ -45,6 +47,7 @@ class LeaderboardFilterViewModel(
 
     suspend fun onSaveClick() {
         saveFilters()
+        filterBadgeCache.updateFilterState(mutableState.value)
         topLevelBackStack.removeLast()
     }
     

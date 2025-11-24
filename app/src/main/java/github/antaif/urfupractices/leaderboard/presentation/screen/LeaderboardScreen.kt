@@ -8,11 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -29,6 +25,8 @@ import github.antaif.urfupractices.leaderboard.presentation.LeaderboardMockData
 import github.antaif.urfupractices.leaderboard.presentation.model.state.LeaderboardState
 import github.antaif.urfupractices.leaderboard.presentation.model.ui.LeaderboardDriverUiModel
 import github.antaif.urfupractices.leaderboard.presentation.viewModel.LeaderboardViewModel
+import github.antaif.urfupractices.ui.theme.icons.Filter
+import github.antaif.urfupractices.uikit.BadgeIconButton
 import github.antaif.urfupractices.uikit.FullscreenError
 import github.antaif.urfupractices.uikit.FullscreenLoading
 import github.antaif.urfupractices.uikit.Spacing
@@ -38,9 +36,11 @@ import org.koin.androidx.compose.koinViewModel
 fun LeaderboardScreen() {
     val viewModel = koinViewModel<LeaderboardViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val hasActiveFilters by viewModel.hasActiveFilters.collectAsStateWithLifecycle(initialValue = false)
 
     LeaderboardContent(
         state.state,
+        hasActiveFilters = hasActiveFilters,
         onDriverClick = { viewModel.onDriverClick(it) },
         onRetryClick = { viewModel.onRetryClick() },
         onFilterClick = { viewModel.onFilterClick() },
@@ -51,6 +51,7 @@ fun LeaderboardScreen() {
 @Composable
 private fun LeaderboardContent(
     state: LeaderboardState.State,
+    hasActiveFilters: Boolean,
     onDriverClick: (LeaderboardDriverUiModel) -> Unit,
     onRetryClick: () -> Unit,
     onFilterClick: () -> Unit,
@@ -89,12 +90,12 @@ private fun LeaderboardContent(
                         }
                     },
                     actions = {
-                        IconButton(onClick = onFilterClick) {
-                            Icon(
-                                imageVector = Icons.Default.ArrowDropDown,
-                                contentDescription = stringResource(R.string.filter)
-                            )
-                        }
+                        BadgeIconButton(
+                            imageVector = Filter,
+                            contentDescription = stringResource(R.string.filter),
+                            onClick = onFilterClick,
+                            showBadge = hasActiveFilters
+                        )
                     }
                 )
                 LazyColumn(
@@ -170,6 +171,7 @@ private fun LeaderboardRow(
 private fun SeasonLeaderboardScreenPreview() {
     LeaderboardContent(
         LeaderboardState.State.Success(LeaderboardMockData.leaderboard),
+        hasActiveFilters = false,
         onDriverClick = {},
         onRetryClick = {},
         onFilterClick = {}

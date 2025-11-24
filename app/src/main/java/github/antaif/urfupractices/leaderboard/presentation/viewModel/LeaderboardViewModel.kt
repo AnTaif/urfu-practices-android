@@ -3,6 +3,7 @@ package github.antaif.urfupractices.leaderboard.presentation.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import github.antaif.urfupractices.core.launchLoadingAndError
+import github.antaif.urfupractices.leaderboard.data.cache.FilterBadgeCache
 import github.antaif.urfupractices.leaderboard.data.model.LeaderboardFilterSettings
 import github.antaif.urfupractices.leaderboard.data.repository.LeaderboardFilterPreferencesRepository
 import github.antaif.urfupractices.leaderboard.domain.interactor.LeaderboardInteractor
@@ -22,10 +23,12 @@ import kotlinx.coroutines.flow.update
 class LeaderboardViewModel(
     private val topLevelBackStack: TopLevelBackStack<Route>,
     private val interactor: LeaderboardInteractor,
-    private val leaderboardFilterPreferencesRepository: LeaderboardFilterPreferencesRepository
+    private val leaderboardFilterPreferencesRepository: LeaderboardFilterPreferencesRepository,
+    private val filterBadgeCache: FilterBadgeCache
 ) : ViewModel() {
     private val mutableState = MutableStateFlow(LeaderboardState())
     val state = mutableState.asStateFlow()
+    val hasActiveFilters = filterBadgeCache.hasActiveFilters
     private var currentFilterSettings: LeaderboardFilterSettings? = null
     private var isFirstLoad = true
 
@@ -38,6 +41,7 @@ class LeaderboardViewModel(
             .onEach { settings ->
                 val filtersChanged = currentFilterSettings != settings
                 currentFilterSettings = settings
+                filterBadgeCache.updateFilterState(settings)
                 if (filtersChanged || isFirstLoad) {
                     isFirstLoad = false
                     loadCurrentLeaderboard()

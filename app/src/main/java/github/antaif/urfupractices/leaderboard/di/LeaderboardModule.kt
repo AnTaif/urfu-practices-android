@@ -1,5 +1,6 @@
 package github.antaif.urfupractices.leaderboard.di
 
+import github.antaif.urfupractices.leaderboard.data.cache.FilterBadgeCache
 import github.antaif.urfupractices.leaderboard.data.local.AppDatabase
 import github.antaif.urfupractices.leaderboard.data.mapper.LeaderboardMapper
 import github.antaif.urfupractices.leaderboard.data.repository.FavoriteDriverRepository
@@ -23,11 +24,13 @@ val leaderboardModule = module {
     single { AppDatabase.create(androidContext()) }
     single { get<AppDatabase>().favoriteDriverDao() }
     single { FavoriteDriverRepository(get()) }
+    
+    single { FilterBadgeCache() }
 
     single { LeaderboardInteractor(get()) }
 
-    viewModel { LeaderboardViewModel(get(), get(), get()) }
+    viewModel { LeaderboardViewModel(get(), get(), get(), get()) }
     viewModel { LeaderboardDriverDetailsViewModel(get(), get(), get()) }
-    viewModel { LeaderboardFilterViewModel(get(), get()) }
+    viewModel { LeaderboardFilterViewModel(get(), get(), get()) }
     viewModel { FavoritesViewModel(get(), get()) }
 }
