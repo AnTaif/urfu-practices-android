@@ -15,6 +15,8 @@ data object Routes {
 
     data class LeaderboardDriverDetails(val driver: LeaderboardDriverUiModel) : Route
 
+    data object Filter : Route
+
     data object Results : TopLevelRoute {
         override val icon = Icons.Default.Notifications
     }

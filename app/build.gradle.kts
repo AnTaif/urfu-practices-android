@@ -81,4 +81,6 @@ dependencies {
     implementation(libs.ktorfit.converters.response)
     implementation(libs.ktorfit.converters.call)
     implementation(libs.ktorfit.converters.flow)
+    
+    implementation(libs.androidx.datastore.preferences)
 }

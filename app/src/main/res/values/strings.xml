@@ -12,4 +12,12 @@
     <string name="driver_details">Driver Details</string>
     <string name="back">Back</string>
     <string name="error_occurred">Error occurred</string>
+    <string name="filter">Filter</string>
+    <string name="filter_settings">Filter Settings</string>
+    <string name="min_points">Minimum Points</string>
+    <string name="team_name">Team Name</string>
+    <string name="enter_team_name">Enter team name</string>
+    <string name="driver_name">Driver Name</string>
+    <string name="enter_driver_name">Enter driver name</string>
+    <string name="done">Done</string>
 </resources>
