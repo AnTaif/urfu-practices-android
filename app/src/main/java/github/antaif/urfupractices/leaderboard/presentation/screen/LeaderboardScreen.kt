@@ -104,9 +104,10 @@ private fun LeaderboardContent(
                 ) {
                     leaderboard.driversLeaderboard.forEach {
                         item(key = it.position) {
-                            LeaderboardRow(it) {
-                                onDriverClick(it)
-                            }
+                            LeaderboardRow(
+                                driver = it,
+                                onClick = { onDriverClick(it) }
+                            )
                         }
                     }
                 }
@@ -116,12 +117,15 @@ private fun LeaderboardContent(
 }
 
 @Composable
-private fun LeaderboardRow(driver: LeaderboardDriverUiModel, onClick: () -> Unit) {
+private fun LeaderboardRow(
+    driver: LeaderboardDriverUiModel,
+    onClick: () -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = Spacing.medium, vertical = Spacing.small)
-            .clickable { onClick() },
+            .clickable(onClick = onClick),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
