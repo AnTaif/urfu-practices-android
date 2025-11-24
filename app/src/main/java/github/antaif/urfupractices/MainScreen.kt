@@ -16,7 +16,9 @@ import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDe
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import github.antaif.urfupractices.leaderboard.presentation.screen.FavoritesScreen
 import github.antaif.urfupractices.leaderboard.presentation.screen.LeaderboardDriverDetailsScreen
+import github.antaif.urfupractices.leaderboard.presentation.screen.LeaderboardFilterScreen
 import github.antaif.urfupractices.leaderboard.presentation.screen.LeaderboardScreen
 import github.antaif.urfupractices.navigation.Route
 import github.antaif.urfupractices.navigation.Routes
@@ -55,6 +57,12 @@ fun MainScreen() {
                 }
                 entry<Routes.LeaderboardDriverDetails> {
                     LeaderboardDriverDetailsScreen(it.driver)
+                }
+                entry<Routes.Filter> {
+                    LeaderboardFilterScreen()
+                }
+                entry<Routes.Favorites> {
+                    FavoritesScreen()
                 }
                 entry<Routes.Results> {
                     CenteredTextScreen("Лента результатов")

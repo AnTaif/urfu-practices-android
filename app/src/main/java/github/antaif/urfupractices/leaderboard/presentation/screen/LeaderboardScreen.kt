@@ -25,6 +25,8 @@ import github.antaif.urfupractices.leaderboard.presentation.LeaderboardMockData
 import github.antaif.urfupractices.leaderboard.presentation.model.state.LeaderboardState
 import github.antaif.urfupractices.leaderboard.presentation.model.ui.LeaderboardDriverUiModel
 import github.antaif.urfupractices.leaderboard.presentation.viewModel.LeaderboardViewModel
+import github.antaif.urfupractices.ui.theme.icons.Filter
+import github.antaif.urfupractices.uikit.BadgeIconButton
 import github.antaif.urfupractices.uikit.FullscreenError
 import github.antaif.urfupractices.uikit.FullscreenLoading
 import github.antaif.urfupractices.uikit.Spacing
@@ -34,11 +36,14 @@ import org.koin.androidx.compose.koinViewModel
 fun LeaderboardScreen() {
     val viewModel = koinViewModel<LeaderboardViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val hasActiveFilters by viewModel.hasActiveFilters.collectAsStateWithLifecycle(initialValue = false)
 
     LeaderboardContent(
         state.state,
+        hasActiveFilters = hasActiveFilters,
         onDriverClick = { viewModel.onDriverClick(it) },
         onRetryClick = { viewModel.onRetryClick() },
+        onFilterClick = { viewModel.onFilterClick() },
     )
 }
 
@@ -46,8 +51,10 @@ fun LeaderboardScreen() {
 @Composable
 private fun LeaderboardContent(
     state: LeaderboardState.State,
+    hasActiveFilters: Boolean,
     onDriverClick: (LeaderboardDriverUiModel) -> Unit,
     onRetryClick: () -> Unit,
+    onFilterClick: () -> Unit,
 ) {
     when (state) {
         LeaderboardState.State.Loading -> {
@@ -81,6 +88,14 @@ private fun LeaderboardContent(
                                 )
                             }
                         }
+                    },
+                    actions = {
+                        BadgeIconButton(
+                            imageVector = Filter,
+                            contentDescription = stringResource(R.string.filter),
+                            onClick = onFilterClick,
+                            showBadge = hasActiveFilters
+                        )
                     }
                 )
                 LazyColumn(
@@ -90,9 +105,10 @@ private fun LeaderboardContent(
                 ) {
                     leaderboard.driversLeaderboard.forEach {
                         item(key = it.position) {
-                            LeaderboardRow(it) {
-                                onDriverClick(it)
-                            }
+                            LeaderboardRow(
+                                driver = it,
+                                onClick = { onDriverClick(it) }
+                            )
                         }
                     }
                 }
@@ -102,12 +118,15 @@ private fun LeaderboardContent(
 }
 
 @Composable
-private fun LeaderboardRow(driver: LeaderboardDriverUiModel, onClick: () -> Unit) {
+private fun LeaderboardRow(
+    driver: LeaderboardDriverUiModel,
+    onClick: () -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = Spacing.medium, vertical = Spacing.small)
-            .clickable { onClick() },
+            .clickable(onClick = onClick),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
@@ -152,7 +171,9 @@ private fun LeaderboardRow(driver: LeaderboardDriverUiModel, onClick: () -> Unit
 private fun SeasonLeaderboardScreenPreview() {
     LeaderboardContent(
         LeaderboardState.State.Success(LeaderboardMockData.leaderboard),
+        hasActiveFilters = false,
         onDriverClick = {},
-        onRetryClick = {}
+        onRetryClick = {},
+        onFilterClick = {}
     )
 }
